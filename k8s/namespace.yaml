@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zmodel-jobs
+  labels:
+    app.kubernetes.io/name: zmodel-jobs
+    app.kubernetes.io/part-of: zmodel-pilot
+    app.kubernetes.io/managed-by: zmodel-control-plane

@@ -1,0 +1,35 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: zmodel-job-manager-role
+  namespace: zmodel-jobs
+  labels:
+    app.kubernetes.io/name: zmodel-job-manager-role
+    app.kubernetes.io/part-of: zmodel-pilot
+rules:
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["create", "get", "list", "watch", "delete"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: zmodel-job-manager-binding
+  namespace: zmodel-jobs
+  labels:
+    app.kubernetes.io/name: zmodel-job-manager-binding
+    app.kubernetes.io/part-of: zmodel-pilot
+subjects:
+  - kind: ServiceAccount
+    name: zmodel-control-plane-sa
+    namespace: zmodel-jobs
+roleRef:
+  kind: Role
+  name: zmodel-job-manager-role
+  apiGroup: rbac.authorization.k8s.io

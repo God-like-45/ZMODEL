@@ -1,0 +1,33 @@
+{
+  "profile_id": "ibm_z_linux_cpu",
+  "display_name": "IBM Z / Linux on IBM Z (s390x) — CPU Execution Baseline",
+  "version": "1.0.0",
+  "target_architecture": "s390x",
+  "target_os": "Linux",
+  "min_python_version": "3.9",
+  "max_python_version": "3.12",
+  "min_ort_version": "1.14.0",
+  "required_execution_providers": [
+    "CPUExecutionProvider"
+  ],
+  "required_facilities": [],
+  "accelerator_type": null,
+  "min_opset": 7,
+  "max_opset": 21,
+  "supported_data_types": [
+    "float32",
+    "float16",
+    "int64",
+    "int32",
+    "uint8",
+    "int8"
+  ],
+  "requires_target_hardware": true,
+  "confidence_classification": "UNVERIFIED_TARGET",
+  "evidence_source": "Linux on IBM Z ONNX Runtime Build Documentation",
+  "documentation_url": "https://github.com/microsoft/onnxruntime/blob/main/BUILD.md",
+  "known_constraints": [
+    "Requires Linux on IBM Z (s390x) LPAR or z/VM guest.",
+    "Runs on s390x SIMD vector extensions without NNPA coprocessor offload."
+  ]
+}

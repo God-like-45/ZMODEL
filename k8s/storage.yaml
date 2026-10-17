@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zmodel-artifacts-pvc
+  namespace: zmodel-jobs
+  labels:
+    app.kubernetes.io/name: zmodel-artifacts-pvc
+    app.kubernetes.io/part-of: zmodel-pilot
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

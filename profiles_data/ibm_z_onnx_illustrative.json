@@ -1,0 +1,142 @@
+{
+  "profile_id": "ibm_z_onnx_illustrative",
+  "display_name": "IBM Z (s390x) — NNPA Acceleration (Illustrative Draft)",
+  "version": "0.9.0-draft",
+  "ruleset_version": "2026.1-illustrative",
+  "target_architecture": "s390x / IBM z16+ (Illustrative)",
+  "target_runtime": "IBM AI Toolkit / ONNX Runtime (NNPA Execution Provider Draft)",
+  "confidence_classification": "ILLUSTRATIVE_DRAFT",
+  "is_illustrative": true,
+  "min_opset": 11,
+  "max_opset": 20,
+  "supported_domains": ["", "ai.onnx"],
+  "supported_data_types": [
+    "float32",
+    "float16"
+  ],
+  "unsupported_data_types": [
+    "complex64",
+    "complex128",
+    "float8e4m3fn",
+    "float8e5m2"
+  ],
+  "operator_rules": {
+    "Gemm": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Matrix Multiplication Assist",
+      "evidence": "IBM z16 Technical Guide (SG24-8950) / Public NNPA Instruction Set Documentation",
+      "notes": "Offloaded to Integrated Accelerator for AI (NNPA). Optimal with static 2D dimensions."
+    },
+    "Conv": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Convolution Assist",
+      "evidence": "IBM z16 Technical Guide / NNPA Architecture Specification",
+      "notes": "Accelerated 2D convolution. Requires standard 4D NCHW tensor layout for hardware offload."
+    },
+    "Relu": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Element-wise Assist",
+      "evidence": "IBM z16 AI Accelerator Overview",
+      "notes": "Vectorized activation function implemented in on-chip coprocessor."
+    },
+    "Softmax": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Softmax Assist",
+      "evidence": "IBM z16 Technical Guide / NNPA Architecture Specification",
+      "notes": "Normalized exponential computed directly on NNPA coprocessor."
+    },
+    "MaxPool": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Pooling Assist",
+      "evidence": "IBM z16 Technical Guide / NNPA Architecture Specification",
+      "notes": "Spatial max pooling offloaded to NNPA engine."
+    },
+    "Add": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Vector Add Assist",
+      "evidence": "IBM z16 Architecture Whitepapers",
+      "notes": "Element-wise tensor addition supported with broadcast limitations."
+    },
+    "Sub": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Vector Sub Assist",
+      "evidence": "IBM z16 Architecture Whitepapers",
+      "notes": "Element-wise tensor subtraction supported."
+    },
+    "Mul": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Vector Mul Assist",
+      "evidence": "IBM z16 Architecture Whitepapers",
+      "notes": "Element-wise tensor multiplication supported."
+    },
+    "MatMul": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": "NNPA Matrix Assist",
+      "evidence": "IBM z16 Technical Guide / NNPA Architecture Specification",
+      "notes": "General matrix multiplication offloaded to NNPA."
+    },
+    "Flatten": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 20,
+      "supported_types": ["float32", "float16"],
+      "hardware_accelerated": null,
+      "evidence": "IBM z/OS and Linux on IBM Z Runtime Guidelines",
+      "notes": "CPU fallback / memory layout adjustment; not directly dispatched to NNPA."
+    },
+    "NonZero": {
+      "status": "FAIL",
+      "min_version": 9,
+      "max_version": 20,
+      "supported_types": [],
+      "hardware_accelerated": null,
+      "evidence": "IBM AI Toolkit Known Limitations Draft",
+      "notes": "Dynamic sparsity selection operator is explicitly unsupported by target accelerator pipeline."
+    },
+    "CustomZOp": {
+      "status": "WARNING",
+      "min_version": 1,
+      "max_version": 20,
+      "supported_types": ["float32"],
+      "hardware_accelerated": "Vendor Plugin",
+      "evidence": "Internal Experimental Documentation",
+      "notes": "Requires experimental vendor shared library libznnpa_custom.so loaded into LD_LIBRARY_PATH."
+    }
+  },
+  "known_limitations": [
+    "ILLUSTRATIVE PROFILE: For evaluation only. Does not guarantee real IBM zSystems hardware execution.",
+    "Hardware acceleration requires static tensor shapes for NNPA coprocessor offload; dynamic batching may trigger CPU fallback.",
+    "Data types other than float32 and float16 (DLFloat) may fall back to host CPU execution.",
+    "Host system must have s390x instruction set level z16 (machine type 3931 or 3932) to utilize NNPA."
+  ],
+  "evidence_source": "IBM z16 Technical Guide (SG24-8950) & Public NNPA Overview (Illustrative Adaptation)",
+  "evidence_url": "https://www.redbooks.ibm.com/abstracts/sg248950.html",
+  "verification_date": "2026-02-01"
+}

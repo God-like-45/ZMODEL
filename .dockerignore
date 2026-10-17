@@ -1,0 +1,34 @@
+# Git and IDE
+.git/
+.gitignore
+.github/
+
+# Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Secrets and local configurations
+.env
+.env.*
+*.env
+
+# Python Bytecode & Caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local databases and logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Temporary test profiles and screenshots
+temp_*
+screenshot*.png

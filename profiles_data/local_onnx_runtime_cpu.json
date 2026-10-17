@@ -1,0 +1,132 @@
+{
+  "profile_id": "local_onnx_runtime_cpu",
+  "display_name": "Local ONNX Runtime — CPU Baseline",
+  "version": "1.0.0",
+  "ruleset_version": "2026.1",
+  "target_architecture": "x86_64 / Generic CPU",
+  "target_runtime": "ONNX Runtime 1.18+ (CPUExecutionProvider)",
+  "confidence_classification": "VERIFIED_DOCUMENTED",
+  "is_illustrative": false,
+  "min_opset": 7,
+  "max_opset": 21,
+  "supported_domains": ["", "ai.onnx", "ai.onnx.ml"],
+  "supported_data_types": [
+    "float32",
+    "float64",
+    "int32",
+    "int64",
+    "int16",
+    "int8",
+    "uint8",
+    "bool"
+  ],
+  "unsupported_data_types": [
+    "complex64",
+    "complex128"
+  ],
+  "operator_rules": {
+    "Gemm": {
+      "status": "PASS",
+      "min_version": 7,
+      "max_version": 21,
+      "supported_types": ["float32", "float64"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Supported via multi-threaded BLAS backend with arbitrary 2D matrix shapes."
+    },
+    "Relu": {
+      "status": "PASS",
+      "min_version": 6,
+      "max_version": 21,
+      "supported_types": ["float32", "float64", "int32", "int64", "int8"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Vectorized element-wise rectified linear unit."
+    },
+    "Softmax": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 21,
+      "supported_types": ["float32", "float64"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Numerically stable exponential normalization."
+    },
+    "Conv": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 21,
+      "supported_types": ["float32"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Supported for 1D, 2D, and 3D convolutions with standard padding schemes."
+    },
+    "MaxPool": {
+      "status": "PASS",
+      "min_version": 11,
+      "max_version": 21,
+      "supported_types": ["float32"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Standard max pooling across spatial dimensions."
+    },
+    "Flatten": {
+      "status": "PASS",
+      "min_version": 9,
+      "max_version": 21,
+      "supported_types": ["float32", "float64", "int32", "int64", "int8", "uint8", "bool"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Zero-copy tensor reshape operation."
+    },
+    "Add": {
+      "status": "PASS",
+      "min_version": 7,
+      "max_version": 21,
+      "supported_types": ["float32", "float64", "int32", "int64"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Element-wise addition with multidirectional broadcasting."
+    },
+    "Sub": {
+      "status": "PASS",
+      "min_version": 7,
+      "max_version": 21,
+      "supported_types": ["float32", "float64", "int32", "int64"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Element-wise subtraction with broadcasting."
+    },
+    "Mul": {
+      "status": "PASS",
+      "min_version": 7,
+      "max_version": 21,
+      "supported_types": ["float32", "float64", "int32", "int64"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Element-wise multiplication with broadcasting."
+    },
+    "MatMul": {
+      "status": "PASS",
+      "min_version": 9,
+      "max_version": 21,
+      "supported_types": ["float32", "float64"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "General matrix multiplication supporting batched tensor contractions."
+    },
+    "Identity": {
+      "status": "PASS",
+      "min_version": 1,
+      "max_version": 21,
+      "supported_types": ["float32", "float64", "int32", "int64", "bool"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Passthrough identity operator."
+    },
+    "Abs": {
+      "status": "PASS",
+      "min_version": 6,
+      "max_version": 21,
+      "supported_types": ["float32", "float64", "int32", "int64"],
+      "evidence": "ONNX Runtime CPU Execution Provider Specification",
+      "notes": "Element-wise absolute value."
+    }
+  },
+  "known_limitations": [
+    "Static capability analysis profile: does NOT guarantee runtime execution success.",
+    "Custom operators in external domains require registration of custom domain kernels.",
+    "Hardware-specific accelerations (e.g. AVX-512 VNNI, AMX) depend on host CPU capabilities."
+  ],
+  "evidence_source": "ONNX Runtime Default CPU Execution Provider Specification (v1.18)",
+  "verification_date": "2026-01-15"
+}

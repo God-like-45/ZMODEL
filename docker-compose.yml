@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  # ============================================================================
+  # PostgreSQL Durable Database Service (Phase 6 persistence)
+  # ============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: zmodel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-zmodel_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-zmodel_password}
+      POSTGRES_DB: ${POSTGRES_DB:-zmodel_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-zmodel_user} -d ${POSTGRES_DB:-zmodel_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ============================================================================
+  # FastAPI REST API Service (Phase 7)
+  # ============================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zmodel-api
+    restart: unless-stopped
+    command: ["uvicorn", "zmodel.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://${POSTGRES_USER:-zmodel_user}:${POSTGRES_PASSWORD:-zmodel_password}@postgres:5432/${POSTGRES_DB:-zmodel_db}
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - ENVIRONMENT=production
+      - CORS_ALLOWED_ORIGINS=*
+      - JOB_CONCURRENCY=2
+      - MAX_QUEUED_JOBS=20
+      - MAX_UPLOAD_SIZE_MB=50
+      - MAX_BENCHMARK_ITERATIONS=1000
+      - MAX_CANDIDATE_COUNT=50
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ============================================================================
+  # Streamlit Human-Facing Web Application (Phases 1-6 UI)
+  # ============================================================================
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zmodel-streamlit
+    restart: unless-stopped
+    command: ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    ports:
+      - "8501:8501"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://${POSTGRES_USER:-zmodel_user}:${POSTGRES_PASSWORD:-zmodel_password}@postgres:5432/${POSTGRES_DB:-zmodel_db}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    name: zmodel_postgres_data

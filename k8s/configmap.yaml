@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zmodel-worker-config
+  namespace: zmodel-jobs
+  labels:
+    app.kubernetes.io/name: zmodel-worker-config
+    app.kubernetes.io/part-of: zmodel-pilot
+data:
+  LOG_LEVEL: "INFO"
+  DEFAULT_RESOURCE_PROFILE: "standard_cpu"
+  IMAGE_PULL_POLICY: "IfNotPresent"
+  WORKER_IMAGE: "zmodel-worker:latest"
+  JOB_TTL_SECONDS: "3600"
